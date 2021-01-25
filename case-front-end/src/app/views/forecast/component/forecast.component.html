@@ -1,0 +1,32 @@
+<div class="card">
+    <div class="card-header">
+        <i class="fa fa-cloud"></i>
+        Consultar Previsão do Tempo
+    </div>
+    <div class="card-body">
+        <div class="form-row">
+            <div class="col-md-12 form-group">
+                <span class="text-value-sm text-muted">Cidade: </span>
+                <span class="text-uppercase text-value-sm"> {{nomeCidade}}</span>
+            </div>
+        </div>
+        <div class="form-row">
+            <ng-container *ngFor="let temperatura of forecast?.temperatura">
+                <div class="col-md-3">
+                    <div class="card border-primary">
+                        <div class="card-header ">
+                            <span class="text-muted">Data: </span>{{temperatura.data}} - {{temperatura.hora}}
+                        </div>
+                        <div class="card-body">
+                            <img alt="" [src]="temperatura.clima.urlIcone" class="img-fluid fabricantprevisao-img float-right" [title]="temperatura.clima.previsao"/>
+                            <span class="text-muted">Temperatura: </span>{{temperatura.temperatura}}º<br>
+                            <span class="text-muted">Temperatura Mínima: </span>{{temperatura.temperaturaMinima}}º<br>
+                            <span class="text-muted">Temperatura Máxima: </span>{{temperatura.temperaturaMaxima}}º<br>
+                            <!--                            <span class="text-muted">Previsão:</span>-->
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+<app-header [fixed]="true" [navbarBrandFull]="{src: 'assets/img/brand/logo.png', height: 20, alt: 'AmbevTech'}"
+            [navbarBrandMinimized]="{src: 'assets/img/brand/sygnet.svg', width: 30, height: 30, alt: 'AmbevTech'}"
+            [sidebarToggler]="'lg'"
+            [asideMenuToggler]="'lg'">
+
+    <ul class="nav navbar-nav ml-auto">
+    </ul>
+</app-header>
+
+<div class="app-body">
+
+    <app-sidebar [fixed]="true" [display]="'lg'">
+        <app-sidebar-nav [navItems]="navItems" [perfectScrollbar] [disabled]="sidebarMinimized"></app-sidebar-nav>
+        <app-sidebar-minimizer></app-sidebar-minimizer>
+    </app-sidebar>
+
+    <!-- Main content -->
+    <main class="main">
+
+        <!-- Breadcrumb -->
+        <ol class="breadcrumb">
+            <app-breadcrumb></app-breadcrumb>
+        </ol>
+
+        <div class="container-fluid mt-2">
+            <router-outlet></router-outlet>
+        </div>
+
+    </main>
+
+</div>
+<app-footer>
+    <span>Previsão do Tempo &copy; 2020.</span>
+    <span class="ml-auto">Gerenciado por <a href="https://ambevtech.gupy.io/">AmbevTech</a></span>
+</app-footer>

@@ -1,0 +1,32 @@
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            Cadastrar/Alterar Cidade
+        </div>
+        <div class="card-body">
+            <form [formGroup]="form" appFormValidator [formGroupValidator]="form">
+                <div class="form-row">
+                    <div class="form-group col-md-8">
+                        <label for="inputNome">Nome</label>
+                        <input #focoFantasia type="text" class="form-control" id="inputNome"
+                               formControlName="nome">
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label for="uf">UF</label>
+                        <ng-select [items]="listaEstados" bindLabel="name" bindValue="value"
+                                   labelForId="uf" formControlName="uf" [clearable]="false" [searchable]="false"
+                                    [required]="'true'" >
+                        </ng-select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <button id="btnSalvar" type="submit" class="btn btn-success" (click)="salvar()">
+                        <i class="fa fa-check"></i> Salvar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

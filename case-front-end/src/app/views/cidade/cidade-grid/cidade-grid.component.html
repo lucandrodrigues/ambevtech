@@ -1,0 +1,29 @@
+<div class="card">
+    <div class="card-header">
+        <div class="float-left">
+            <i class="fa fa-list"></i> Cidades
+        </div>
+        <div class="float-right">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-sm btn-primary" (click)="novaCidade();" [title]="'Cadastrar Nova Cidade'">
+                    <i class="fa fa-search-plus"></i>  <span class="d-none d-md-inline"> Nova</span>
+                </button>
+                <button type="button" class="btn btn-sm btn-warning" (click)="abrirForm();" [title]="'Editar Cidade'">
+                    <i class="fa fa-edit"></i>  <span class="d-none d-md-inline"> Editar</span>
+                </button>
+                <button type="button" class="btn btn-sm btn-success" (click)="abrirPrevisaoTempo();" [title]="'Previsão do Tempo'">
+                    <i class="fa fa-cloud"></i>  <span class="d-none d-md-inline"> Previsão do Tempo</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <app-vsm-grid [gridOptions]="gridOptions" [rowData]="rowData" [mostrarPesquisar]="'true'"
+                      (onPesquisar)="pesquisar($event)" (onDuploClick)="duploClick($event)">
+        </app-vsm-grid>
+    </div>
+</div>
+
+<app-overlay [(show)]="showSidebar">
+    <app-cidade-form [cidadeId]="cidadeSelecionada?.id" (onSalvar)="salvarCliente()" [abriuModal]="showSidebar"></app-cidade-form>
+</app-overlay>

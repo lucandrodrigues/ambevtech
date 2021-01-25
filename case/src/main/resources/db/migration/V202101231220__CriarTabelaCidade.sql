@@ -1,1 +1,9 @@
-create table cidade (id int not null primary key auto_increment, nome varchar(255) not null, uf varchar(2) not null);
+CREATE TABLE IF NOT EXISTS cidade (
+  id INT NOT NULL AUTO_INCREMENT,
+  nome VARCHAR(255) NOT NULL,
+  latitude DECIMAL(6,4) NOT NULL,
+  longitude DECIMAL(6,4) NOT NULL,
+  data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
+  data_atualizacao DATETIME ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8;

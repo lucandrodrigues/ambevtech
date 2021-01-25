@@ -21,6 +21,8 @@ public class ApplicationYMLConfig {
     @Configuration
     @EnableConfigurationProperties
     @ConfigurationProperties(prefix = "spring")
+    @Getter
+    @Setter
     class SpringProperties {
         private Map<String, String> datasource;
 

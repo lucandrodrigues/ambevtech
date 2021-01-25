@@ -1,0 +1,9 @@
+.previsao-img {
+  max-width: 300px;
+}
+
+@media (max-width: 720px) {
+  .previsao-img {
+    max-width: 100%;
+  }
+}

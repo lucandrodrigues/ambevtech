@@ -1,0 +1,50 @@
+<div class="row" *ngIf="mostrarPesquisar">
+    <div class="col-md-12">
+        <div class="input-group">
+            <input #textoPesquisa id="inputPesquisarVSMGrid" (keyup.enter)="pesquisar();" [(ngModel)]="inputPesquisar"
+                type="text" class="form-control" [placeholder]="textoInput" aria-label="Pesquisar"
+                aria-describedby="basic-addon1">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="pesquisarVSMGrid" style="cursor: pointer" (click)="pesquisar();">
+                    <i class="fa fa-search"></i>
+                </span>
+            </div>
+            <div class="input-group-prepend float-right" *ngIf="mostrarFiltros">
+                <button id="btnFiltrosVsmGrid" type="button" class="btn btn-primary" (click)="filtrar();">
+                    <i class="fa fa-list"></i> <span class="d-none d-sm-inline-block ml-1">Filtros</span>
+                </button>
+            </div>
+            <div class="input-group-prepend float-right" *ngIf="mostrarFiltros && !mostrarPesquisar">
+                <button id="btnPesquisarVSMGrid" [title]="'Pesquisar todos'" type="button" class="btn btn-block btn-secondary"
+                    (click)="pesquisar();">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" style="display: flex; flex-direction: row">
+    <div style=" overflow: hidden; flex-grow: 1">
+        <ag-grid-angular #agGrid style="width: 100%; height: 100%;" class="ag-theme-material"
+            [gridOptions]="gridOptions" [rowData]="rowData && rowData.content ? rowData.content : rowData"
+            (rowDoubleClicked)="duploClick($event);" (gridReady)="gridReady($event)"
+            (selectionChanged)="selectionChanged($event)">
+        </ag-grid-angular>
+    </div>
+</div>
+<div class="row" style="display: flex; flex-direction: row; padding-top: 5px"
+    *ngIf="(rowData && rowData.totalElements && rowData.totalElements > 7)">
+    <div class="col-sm-12 col-md-6">
+        <div class="float-right">
+            <pagination [(ngModel)]="pagina" [boundaryLinks]="true"
+                [totalItems]="rowData && rowData.totalElements ? rowData.totalElements : 0" [maxSize]="3"
+                [itemsPerPage]="7" (pageChanged)="paginar($event);" (selectionChanged)="select($event);"
+                previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+            </pagination>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-6">
+        <span class="float-right" style="padding-top: 5px">Total de registros:
+            {{(rowData && rowData.totalElements && rowData.totalElements > 0) ? rowData.totalElements : 0}}</span>
+    </div>
+</div>
