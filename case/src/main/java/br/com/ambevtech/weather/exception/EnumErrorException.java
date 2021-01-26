@@ -11,6 +11,16 @@ public enum EnumErrorException {
             "Corpo e/ou parametros da requisição inválido(s).",
             "{0}"),
 
+    DUPLICADO(HttpStatus.CONFLICT,
+            "Aviso",
+            "Registro duplicado",
+            "{0}"),
+
+    NAO_LOCALIZADO(HttpStatus.BAD_REQUEST,
+            "Aviso",
+            "Registro não localizado",
+            "{0}"),
+
     ERRO_INTERNO(HttpStatus.INTERNAL_SERVER_ERROR,
             "Erro",
             "Erro interno.",

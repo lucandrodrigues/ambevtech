@@ -1,5 +1,6 @@
 package br.com.ambevtech.weather.service;
 
+import br.com.ambevtech.weather.config.CacheNames;
 import br.com.ambevtech.weather.dto.CidadeDTO;
 import br.com.ambevtech.weather.dto.FiltroDTO;
 import br.com.ambevtech.weather.dto.PrevisaoDTO;
@@ -9,6 +10,7 @@ import br.com.ambevtech.weather.exception.ServiceException;
 import br.com.ambevtech.weather.repository.CidadeRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -25,7 +27,7 @@ public class CidadeService {
         this.openWeatherApiService = openWeatherApiService;
     }
 
-    public Page<CidadeDTO> listarCidades(FiltroDTO<String> filtro) {
+    public Page<CidadeDTO> listarCidades(FiltroDTO<String> filtro) throws ServiceException {
         if (ObjectUtils.isEmpty(filtro)) {
             throw new ServiceException(EnumErrorException.PARAMETROS_INVALIDOS);
         }
@@ -39,15 +41,13 @@ public class CidadeService {
         return cidades;
     }
 
-    public CidadeDTO cadastrarCidade(CidadeDTO dto) {
-        CidadeDTO cidadeDTO = null;
+    public CidadeDTO cadastrarCidade(CidadeDTO dto) throws ServiceException {
+        CidadeDTO cidadeDTO = repository.findByNome(dto.getNome());;
+        if (!ObjectUtils.isEmpty(cidadeDTO)) {
+            throw new ServiceException(EnumErrorException.DUPLICADO, new Object[]{"Esta cidade já está cadastrada."});
+        }
+
         try {
-            cidadeDTO = repository.findByNome(dto.getNome());
-
-            if (!ObjectUtils.isEmpty(cidadeDTO)) {
-                throw new ServiceException(EnumErrorException.ERRO_INTERNO, new Object[]{"Esta cidade já está cadastrada."});
-            }
-
             cidadeDTO = openWeatherApiService.buscarCidade(dto.getNome());
             Cidade cidade = new Cidade();
             BeanUtils.copyProperties(cidadeDTO, cidade);
@@ -60,9 +60,10 @@ public class CidadeService {
         return cidadeDTO;
     }
 
-    public PrevisaoDTO consultarPrevisao(Integer id) {
+    @Cacheable(value = CacheNames.cachePrevisao, key = "{#id}")
+    public PrevisaoDTO consultarPrevisao(Integer id) throws ServiceException {
         Cidade cidade = repository.findById(id)
-                .orElseThrow(() -> new ServiceException(EnumErrorException.ERRO_INTERNO, new Object[]{"Falha ao localizar cidade."}));
+                .orElseThrow(() -> new ServiceException(EnumErrorException.NAO_LOCALIZADO, new Object[]{"Falha ao localizar cidade."}));
 
         return openWeatherApiService.buscarPrevisao(cidade);
     }

@@ -71,7 +71,7 @@ public class SwaggerConfig {
                 .title("API de consulta da previsão do Tempo")
                 .description("API para cadastro de cidades e consulta da previsão do tempo")
                 .version("1.0.0")
-                .contact(new Contact("Rodrigo Coradi", "", "wcrodrigo@hotmail.com"))
+                .contact(new Contact("Previsão do Tempo", "http://localhost:4200/", "lucandrodrigues@gmail.com"))
                 .build();
     }
 

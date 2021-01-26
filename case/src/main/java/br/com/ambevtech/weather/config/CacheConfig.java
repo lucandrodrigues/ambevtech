@@ -41,13 +41,8 @@ public class CacheConfig {
                 .withExpiry(ExpiryPolicyBuilder.timeToLiveExpiration(Duration.ofMinutes(CacheNames.cacheDefaultTime)))
                 .build();
 
-        CacheConfiguration<Object, Object> cacheListarCidade = CacheConfigurationBuilder.newCacheConfigurationBuilder(Object.class, Object.class, resourcePools)
-                .withExpiry(ExpiryPolicyBuilder.timeToLiveExpiration(Duration.ofMinutes(CacheNames.cacheDefaultTime)))
-                .build();
-
         Map<String, CacheConfiguration<?, ?>> caches = new HashMap<>();
 		caches.put(CacheNames.cachePrevisao, cachePrevisao);
-        caches.put(CacheNames.cacheListarCidade, cacheListarCidade);
 
         EhcacheCachingProvider provider = (EhcacheCachingProvider) Caching.getCachingProvider("org.ehcache.jsr107.EhcacheCachingProvider");
         org.ehcache.config.Configuration configuration = new DefaultConfiguration(caches, provider.getDefaultClassLoader());

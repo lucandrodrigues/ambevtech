@@ -19,7 +19,7 @@ public class ClimaDTO implements Serializable {
     @SerializedName("icon")
     private String icone;
 
-    public String getUrlIcone() {
+    public String getIcone() {
         return Constantes.OpenWeatherMap.URL_BASE + "/img/wn/" + this.icone + "@2x.png";
     }
 
