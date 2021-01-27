@@ -8,13 +8,15 @@ import {OverlayComponent} from '../../componentes/overlay/overlay.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {FormValidatorDirective} from '../../util/form-validator.directive';
 import {NgSelectModule} from '@ng-select/ng-select';
+import { CidadePrevisaoComponent } from './cidade-previsao/cidade-previsao/cidade-previsao.component';
 
 @NgModule({
     declarations: [
         CidadeFormComponent,
         CidadeGridComponent,
         OverlayComponent,
-        FormValidatorDirective
+        FormValidatorDirective,
+        CidadePrevisaoComponent
     ],
     imports: [
         CommonModule,

@@ -1,3 +1,4 @@
+import { Previsao } from './../../models/previsao';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Cidade} from '../../models/cidade';
 import {Observable} from 'rxjs';
@@ -21,7 +22,7 @@ export class CidadeResource {
         return this.http.post<Array<Cidade>>(endpointBackend + 'cidade/listar', filtro);
     }
 
-    buscarPorId(cidadeId: number): Observable<Cidade> {
-        return this.http.get<Cidade>(endpointBackend + 'cidade/' + cidadeId);
+    public buscarPrevisao(cidadeId: number): Observable<Previsao> {
+        return this.http.get<Previsao>(endpointBackend + 'cidade/previsao/'+ cidadeId.toString());
     }
 }

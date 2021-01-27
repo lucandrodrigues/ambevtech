@@ -15,10 +15,11 @@ import {Router} from '@angular/router';
 export class CidadeGridComponent implements OnInit {
 
     public gridOptions: GridOptions = VsmGridComponent.getDefaultGridOptions();
-    public rowData: Cidade[] = [];
+    public cidades: Cidade[] = [];
     public filtro: FiltroUtil = new FiltroUtil();
     public cidadeSelecionada = new Cidade();
     public showSidebar = false;
+    public showSidebarPrevisao = false;
 
     constructor(private service: CidadeService,
                 private mensagemService: MensagemService,
@@ -35,11 +36,6 @@ export class CidadeGridComponent implements OnInit {
                 headerName: 'Nome',
                 field: 'nome',
                 width: 150
-            },
-            {
-                headerName: 'UF',
-                field: 'uf',
-                width: 100
             },
         ];
     }
@@ -60,7 +56,8 @@ export class CidadeGridComponent implements OnInit {
 
     public duploClick(event) {
         this.cidadeSelecionada = event;
-        this.showSidebar = true;
+        console.log('cidadeSelecionada', this.cidadeSelecionada);
+        this.showSidebarPrevisao = true;
     }
 
     public novaCidade() {
@@ -83,14 +80,15 @@ export class CidadeGridComponent implements OnInit {
     public abrirPrevisaoTempo() {
         if (this.validarSelecaoGrid()) {
             this.cidadeSelecionada = this.gridOptions.api.getSelectedRows()[0];
-            this.router.navigate(['/previsao' , this.cidadeSelecionada.nome]);
+            console.log('cidadeSelecionada', this.cidadeSelecionada);
+            this.showSidebarPrevisao = true;
         }
     }
 
     private filtrar() {
         this.service.listarCidades(this.filtro).subscribe(
             (response) => {
-                this.rowData = response;
+                this.cidades = response;
             });
     }
 

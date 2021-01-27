@@ -45,6 +45,7 @@ public class OpenWeatherApiService {
 
             Type type = new TypeToken<Map<String, BigDecimal>>() {}.getType();
             Map<String, BigDecimal> coordenadas = gson.fromJson(objRetornoResponse.get("coord"), type);
+            nome = objRetornoResponse.get("name").toString().replaceAll("\"", "");
 
             return new CidadeDTO(nome, coordenadas);
         } catch (Exception e) {
@@ -68,7 +69,10 @@ public class OpenWeatherApiService {
             logger.info("Consulta realizada: " + response.toString());
 
             Gson gson = new Gson();
-            return gson.fromJson(response.getBody(), PrevisaoDTO.class);
+            PrevisaoDTO previsao = gson.fromJson(response.getBody(), PrevisaoDTO.class);
+            previsao.setNomeCidade(cidade.getNome());
+
+            return previsao;
         } catch (Exception e) {
             logger.error("Falha ao consultar OpenWeatherApi: " + e.getMessage());
             throw new ServiceException(EnumErrorException.ERRO_INTERNO, new Object[]{e.getMessage()});

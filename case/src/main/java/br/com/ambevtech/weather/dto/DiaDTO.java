@@ -6,6 +6,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -21,5 +25,10 @@ public class DiaDTO implements Serializable {
 
     @SerializedName("weather")
     List<ClimaDTO> climas;
+
+    public String getDiaDaSemana() {
+        SimpleDateFormat simpleDateformat = new SimpleDateFormat("EEEE");
+        return simpleDateformat.format(new Date(this.data * 1000L));
+    }
 
 }

@@ -1,3 +1,4 @@
+import { Previsao } from './../../models/previsao';
 import {Injectable} from '@angular/core';
 import {CidadeResource} from '../../rest/cidade/cidade-resource';
 import {Cidade} from '../../models/cidade';
@@ -26,11 +27,11 @@ export class CidadeService {
         }
         return this.resource.listarCidades(filtro);
     }
-
-    public buscarPorId(cidadeId: number): Observable<Cidade> {
+    
+    public buscarPrevisao(cidadeId: number): Observable<Previsao> {
         if (FunctionsUtil.isEmptyId(cidadeId)) {
             return throwError('Cidade deve ser informada');
         }
-        return this.resource.buscarPorId(cidadeId);
+        return this.resource.buscarPrevisao(cidadeId);
     }
 }

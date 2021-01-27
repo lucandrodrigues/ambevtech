@@ -17,6 +17,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/cidade")
 @Api("/cidade")
+@CrossOrigin()
 public class CidadeResource {
 
     private final CidadeService service;

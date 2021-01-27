@@ -1,10 +1,9 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {FunctionsUtil} from '../../../util/functions-util';
-import {CidadeService} from '../../../service/cidade/cidade.service';
-import {Cidade} from '../../../models/cidade';
-import {MensagemService} from '../../../service/mensagem.service';
-import {estados} from '../../../util/endpoint-config';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FunctionsUtil } from '../../../util/functions-util';
+import { CidadeService } from '../../../service/cidade/cidade.service';
+import { Cidade } from '../../../models/cidade';
+import { MensagemService } from '../../../service/mensagem.service';
 
 @Component({
     selector: 'app-cidade-form',
@@ -19,15 +18,13 @@ export class CidadeFormComponent implements OnInit, OnChanges {
     @Input() abriuModal = false;
     public form: FormGroup;
     public cidade: Cidade = new Cidade();
-    public listaEstados = estados;
 
     constructor(private fb: FormBuilder,
-                private service: CidadeService,
-                private mensagemService: MensagemService) {
+        private service: CidadeService,
+        private mensagemService: MensagemService) {
         this.form = fb.group({
             id: [null],
             nome: [null, Validators.compose([Validators.required])],
-            uf: [null, Validators.compose([Validators.required, Validators.maxLength(2), Validators.minLength(2)])]
         });
     }
 
@@ -38,12 +35,7 @@ export class CidadeFormComponent implements OnInit, OnChanges {
         if (changes) {
             if (this.abriuModal === true) {
                 if (!FunctionsUtil.isEmptyId(this.cidadeId)) {
-                    this.service.buscarPorId(this.cidadeId).subscribe(
-                        (response) => {
-                            this.cidade = response;
-                            this.form.patchValue(this.cidade);
-                        }
-                    );
+                    
                 } else {
                     this.form.reset();
                 }
@@ -58,7 +50,7 @@ export class CidadeFormComponent implements OnInit, OnChanges {
                 this.form.patchValue(response);
                 this.mensagemService.sucesso('Atençao', 'Cidade salva com sucesso!');
                 this.onSalvar.emit();
-        });
+            });
     }
 
 }
