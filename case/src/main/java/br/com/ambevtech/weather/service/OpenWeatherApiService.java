@@ -2,6 +2,7 @@ package br.com.ambevtech.weather.service;
 
 import br.com.ambevtech.weather.config.OpenWeatherApiConfig;
 import br.com.ambevtech.weather.dto.CidadeDTO;
+import br.com.ambevtech.weather.dto.DiaDTO;
 import br.com.ambevtech.weather.dto.PrevisaoDTO;
 import br.com.ambevtech.weather.entity.Cidade;
 import br.com.ambevtech.weather.exception.EnumErrorException;
@@ -10,6 +11,7 @@ import br.com.ambevtech.weather.util.Constantes;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import org.hibernate.validator.constraints.Range;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -71,14 +74,20 @@ public class OpenWeatherApiService {
             Gson gson = new Gson();
             PrevisaoDTO previsao = gson.fromJson(response.getBody(), PrevisaoDTO.class);
             previsao.setNomeCidade(cidade.getNome());
+            previsao.setDias(somenteCincoDias(previsao.getDias()));
 
             return previsao;
         } catch (Exception e) {
             logger.error("Falha ao consultar OpenWeatherApi: " + e.getMessage());
             throw new ServiceException(EnumErrorException.ERRO_INTERNO, new Object[]{e.getMessage()});
         }
+    }
 
-
+    private List<DiaDTO> somenteCincoDias(List<DiaDTO> dias) {
+        if( dias.size() > 5 ) {
+            dias.subList(5, dias.size()).clear();
+        }
+        return dias;
     }
 
 }

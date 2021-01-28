@@ -26,7 +26,6 @@ export class CidadePrevisaoComponent implements OnInit {
           this.service.buscarPrevisao(this.cidadeId).subscribe(
             (response) => {
               this.previsao = response;
-              console.log('previsao', this.previsao);
             }
           );
         }

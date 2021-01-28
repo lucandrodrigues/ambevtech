@@ -1,3 +1,43 @@
-<p>
-  cidade-previsao works!
-</p>
+<div class="col-md-12">
+  <div class="card">
+    <div class="card-header">
+      <div class="float-left">
+        <i class="fa fa-list"></i> Previsão do Tempo
+      </div>
+    </div>
+    <div class="card-body text-center">
+      <table class="table table-sm">
+        <tbody>
+          <tr *ngFor="let dia of previsao.dias; let i = index">
+            <td *ngIf="i == 0" class="text-left">
+              <div>{{dia.diaDaSemana | titlecase}}</div>
+              <h1 class="m-0">{{previsao.nomeCidade}}</h1>
+              <div>{{dia.climas[0].descricao | titlecase}}</div>
+            </td>
+            <td *ngIf="i == 0">
+              <h1 class="m-0" style="font-size: xxx-large;">{{dia.temperatura.dia | number:'1.0-0'}}º</h1>
+              <div>
+                Mín <b>{{dia.temperatura.maxima | number:'1.0-0'}}º</b> 
+                Máx <b>{{dia.temperatura.minima| number:'1.0-0'}}º</b>
+              </div>
+            </td>
+            <td *ngIf="i == 0" class="text-right">
+              <img alt="" [src]="dia.climas[0].iconeGrande" class="img-fluid"/>
+              <span title="Chance de Chuva">{{dia.chuva | percent}}</span>
+            </td>
+            <td class="text-left" *ngIf="i > 0">{{dia.diaDaSemana | titlecase}}</td>
+            <td *ngIf="i > 0">
+              <img alt="" [src]="dia.climas[0].icone" class="img-fluid" [title]="dia.climas[0].descricao"/>
+              <span title="Chance de Chuva">{{dia.chuva | percent}}</span>
+            </td>
+            <td class="text-right" *ngIf="i > 0">
+              Mín <b>{{dia.temperatura.maxima | number:'1.0-0'}}º</b> 
+              Máx <b>{{dia.temperatura.minima| number:'1.0-0'}}º</b>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div>

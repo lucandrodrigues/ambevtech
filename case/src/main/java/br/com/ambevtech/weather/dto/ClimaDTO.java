@@ -20,6 +20,9 @@ public class ClimaDTO implements Serializable {
     private String icone;
 
     public String getIcone() {
+        return Constantes.OpenWeatherMap.URL_BASE + "/img/wn/" + this.icone + ".png";
+    }
+    public String getIconeGrande() {
         return Constantes.OpenWeatherMap.URL_BASE + "/img/wn/" + this.icone + "@2x.png";
     }
 

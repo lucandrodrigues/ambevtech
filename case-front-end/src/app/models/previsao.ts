@@ -8,9 +8,10 @@ export class Previsao {
 }
 
 export class Dia {
-    data: string;
+    diaDaSemana: string;
     temperatura: Temperatura
     climas: Clima[];
+    chuva: number;
 
     constructor() {
         this.climas = [];
@@ -26,4 +27,5 @@ export class Temperatura {
 export class Clima {
     descricao: string;
     icone: string;
+    iconeGrande: string;
 }
