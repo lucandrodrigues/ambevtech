@@ -6,4 +6,6 @@ public interface CacheNames {
 
     String cachePrevisao = "cachePrevisao";
 
+    String cacheCidade = "cacheCidade";
+
 }

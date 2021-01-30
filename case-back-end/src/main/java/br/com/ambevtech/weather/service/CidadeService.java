@@ -33,40 +33,45 @@ public class CidadeService {
             throw new ServiceException(EnumErrorException.PARAMETROS_INVALIDOS);
         }
 
-        Page<CidadeDTO> cidades = null;
         try {
-            cidades = repository.listarCidades(filtro.getObj().getNome(), PageRequest.of(filtro.getPage(), filtro.getSize()));
+            return repository.listarCidades(filtro.getObj().getNome(), PageRequest.of(filtro.getPage(), filtro.getSize()));
         } catch (Exception e) {
             throw new ServiceException(EnumErrorException.ERRO_INTERNO, new Object[]{"Falha ao buscar cidades no banco de dados."});
         }
-        return cidades;
     }
 
-    public CidadeDTO cadastrarCidade(CidadeDTO dto) throws ServiceException {
-        CidadeDTO cidadeDTO = repository.findByNome(dto.getNome());;
-        if (!ObjectUtils.isEmpty(cidadeDTO)) {
-            throw new ServiceException(EnumErrorException.DUPLICADO, new Object[]{"Esta cidade já está cadastrada."});
-        }
-
+    public CidadeDTO cadastrarCidade(String nome) throws ServiceException {
+        CidadeDTO cidadeDTO = validarCidadeCadastrada(nome);
         try {
-            cidadeDTO = openWeatherApiService.buscarCidade(dto.getNome());
-            Cidade cidade = new Cidade();
-            BeanUtils.copyProperties(cidadeDTO, cidade);
-            cidade = repository.save(cidade);
-            BeanUtils.copyProperties(cidade, cidadeDTO);
+            cidadeDTO = openWeatherApiService.buscarCidade(nome);
+            salvar(cidadeDTO);
+            return cidadeDTO;
         } catch (HttpClientErrorException e) {
-            throw new ServiceException(EnumErrorException.NAO_LOCALIZADO, new Object[]{"Cidade não localizada" });
+            throw new ServiceException(EnumErrorException.NAO_LOCALIZADO, new Object[]{"Cidade não localizada"});
         } catch (Exception e) {
             throw new ServiceException(EnumErrorException.ERRO_INTERNO, new Object[]{e.getMessage()});
         }
+    }
 
-        return cidadeDTO;
+    private void salvar(CidadeDTO cidadeDTO) {
+        Cidade cidade = new Cidade();
+        BeanUtils.copyProperties(cidadeDTO, cidade);
+        repository.save(cidade);
+        BeanUtils.copyProperties(cidade, cidadeDTO);
+    }
+
+    private CidadeDTO validarCidadeCadastrada(String nome) throws ServiceException {
+        CidadeDTO dto = repository.findByNome(nome);
+        if (!ObjectUtils.isEmpty(dto)) {
+            throw new ServiceException(EnumErrorException.DUPLICADO, new Object[]{"Esta cidade já está cadastrada."});
+        }
+        return dto;
     }
 
     @Cacheable(value = CacheNames.cachePrevisao, key = "{#id}")
     public PrevisaoDTO consultarPrevisao(Integer id) throws ServiceException {
         Cidade cidade = repository.findById(id)
-                .orElseThrow(() -> new ServiceException(EnumErrorException.NAO_LOCALIZADO, new Object[]{"Falha ao localizar cidade."}));
+                .orElseThrow(() -> new ServiceException(EnumErrorException.NAO_LOCALIZADO, new Object[]{"Cidade não localizada"}));
 
         return openWeatherApiService.buscarPrevisao(cidade);
     }

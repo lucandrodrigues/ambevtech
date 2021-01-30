@@ -36,6 +36,7 @@ export class CidadeGridComponent implements OnInit {
     ngOnInit() {
         this.foco.nativeElement.focus();
         this.filtro.obj = new Cidade();
+        this.filtrar();
     }
 
     public pesquisar() {
@@ -59,7 +60,7 @@ export class CidadeGridComponent implements OnInit {
         this.showSidebar = true;
     }
 
-    public salvarCliente() {
+    public salvarCidade() {
         this.showSidebar = false;
         this.filtrar();
     }

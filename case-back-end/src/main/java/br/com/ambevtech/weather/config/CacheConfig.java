@@ -3,13 +3,11 @@ package br.com.ambevtech.weather.config;
 import org.ehcache.config.CacheConfiguration;
 import org.ehcache.config.ResourcePools;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
-import org.ehcache.config.builders.CacheEventListenerConfigurationBuilder;
 import org.ehcache.config.builders.ExpiryPolicyBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.ehcache.config.units.EntryUnit;
 import org.ehcache.config.units.MemoryUnit;
 import org.ehcache.core.config.DefaultConfiguration;
-import org.ehcache.event.EventType;
 import org.ehcache.jsr107.EhcacheCachingProvider;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.jcache.JCacheCacheManager;
@@ -41,8 +39,13 @@ public class CacheConfig {
                 .withExpiry(ExpiryPolicyBuilder.timeToLiveExpiration(Duration.ofMinutes(CacheNames.cacheDefaultTime)))
                 .build();
 
+        CacheConfiguration<Object, Object> cacheCidade = CacheConfigurationBuilder.newCacheConfigurationBuilder(Object.class, Object.class, resourcePools)
+                .withExpiry(ExpiryPolicyBuilder.timeToLiveExpiration(Duration.ofMinutes(CacheNames.cacheDefaultTime)))
+                .build();
+
         Map<String, CacheConfiguration<?, ?>> caches = new HashMap<>();
 		caches.put(CacheNames.cachePrevisao, cachePrevisao);
+        caches.put(CacheNames.cacheCidade, cacheCidade);
 
         EhcacheCachingProvider provider = (EhcacheCachingProvider) Caching.getCachingProvider("org.ehcache.jsr107.EhcacheCachingProvider");
         org.ehcache.config.Configuration configuration = new DefaultConfiguration(caches, provider.getDefaultClassLoader());

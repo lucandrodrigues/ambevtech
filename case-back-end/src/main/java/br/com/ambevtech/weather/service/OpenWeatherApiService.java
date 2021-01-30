@@ -1,5 +1,6 @@
 package br.com.ambevtech.weather.service;
 
+import br.com.ambevtech.weather.config.CacheNames;
 import br.com.ambevtech.weather.config.OpenWeatherApiConfig;
 import br.com.ambevtech.weather.dto.CidadeDTO;
 import br.com.ambevtech.weather.dto.DiaDTO;
@@ -14,6 +15,7 @@ import com.google.gson.reflect.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -34,22 +36,15 @@ public class OpenWeatherApiService {
         this.openWeatherApiConfig = openWeatherApiConfig;
     }
 
-    public CidadeDTO buscarCidade(String nome) throws ServiceException {
+    @Cacheable(value = CacheNames.cacheCidade, key = "{#nome}")
+    private ResponseEntity<String> buscarCidadeApi(String nome) throws ServiceException {
         try {
-            String uri = "/data/2.5/weather" + "?appid=" + Constantes.OpenWeatherMap.APPID + "?q=" + nome;
+            String uri = "/data/2.5/weather?appid=" + Constantes.OpenWeatherMap.APPID + "&q=" + nome;
             logger.info("Consultando previsão em OpenWeatherApi para a cidade: " + nome);
             ResponseEntity<String> response = openWeatherApiConfig.getRestTemplate().getForEntity(uri, String.class);
             logger.info("Consulta realizada: " + response.toString());
 
-            Gson gson = new Gson();
-            JsonObject objRetornoResponse = gson.fromJson(response.getBody(), JsonObject.class);
-
-            Type type = new TypeToken<Map<String, BigDecimal>>() {
-            }.getType();
-            Map<String, BigDecimal> coordenadas = gson.fromJson(objRetornoResponse.get("coord"), type);
-            nome = objRetornoResponse.get("name").toString().replaceAll("\"", "");
-
-            return new CidadeDTO(nome, coordenadas);
+            return response;
         } catch (HttpClientErrorException e) {
             logger.error("Cidade não localizada em OpenWeatherApi: " + e.getMessage());
             throw e;
@@ -58,6 +53,19 @@ public class OpenWeatherApiService {
             throw e;
         }
 
+    }
+
+    public CidadeDTO buscarCidade(String nome) {
+        ResponseEntity<String> response = buscarCidadeApi(nome);
+
+        Gson gson = new Gson();
+        JsonObject objRetornoResponse = gson.fromJson(response.getBody(), JsonObject.class);
+
+        Type type = new TypeToken<Map<String, BigDecimal>>() {}.getType();
+        Map<String, BigDecimal> coordenadas = gson.fromJson(objRetornoResponse.get("coord"), type);
+        nome = objRetornoResponse.get("name").toString().replaceAll("\"", "");
+
+        return new CidadeDTO(nome, coordenadas);
     }
 
     public PrevisaoDTO buscarPrevisao(Cidade cidade) throws ServiceException {
@@ -70,7 +78,7 @@ public class OpenWeatherApiService {
             Gson gson = new Gson();
             PrevisaoDTO previsao = gson.fromJson(response.getBody(), PrevisaoDTO.class);
             previsao.setNomeCidade(cidade.getNome());
-            previsao.setDias(somenteCincoDias(previsao.getDias()));
+            previsao.setDias(limitarDias(previsao.getDias(), Constantes.DIAS_PREVISAO));
 
             return previsao;
         } catch (Exception e) {
@@ -82,16 +90,16 @@ public class OpenWeatherApiService {
     private String buildURIPrevisao(Cidade cidade) {
         return "/data/2.5/onecall" +
                 "?appid=" + Constantes.OpenWeatherMap.APPID +
-                "?lang=" + Constantes.OpenWeatherMap.LANG +
-                "?units=" + Constantes.OpenWeatherMap.UNITS +
+                "&lang=" + Constantes.OpenWeatherMap.LANG +
+                "&units=" + Constantes.OpenWeatherMap.UNITS +
                 "&exclude=current,minutely,hourly,alerts" +
-                "?lat=" + cidade.getLatitude() +
-                "?lon=" + cidade.getLongitude();
+                "&lat=" + cidade.getLatitude() +
+                "&lon=" + cidade.getLongitude();
     }
 
-    private List<DiaDTO> somenteCincoDias(List<DiaDTO> dias) {
-        if (dias.size() > Constantes.DIAS_PREVISAO) {
-            dias.subList(Constantes.DIAS_PREVISAO, dias.size()).clear();
+    private List<DiaDTO> limitarDias(List<DiaDTO> dias, int limite) {
+        if (dias.size() > limite) {
+            dias.subList(limite, dias.size()).clear();
         }
         return dias;
     }

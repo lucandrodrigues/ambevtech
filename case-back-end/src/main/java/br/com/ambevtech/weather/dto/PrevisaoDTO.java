@@ -15,9 +15,6 @@ public class PrevisaoDTO implements Serializable {
 
     private String nomeCidade;
 
-    @SerializedName("timezone_offset")
-    private Long fuso;
-
     @SerializedName("daily")
     private List<DiaDTO> dias;
 

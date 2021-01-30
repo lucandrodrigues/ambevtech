@@ -24,7 +24,7 @@
         <ul class="list-group pt-2">
             <li class="list-group" *ngIf="cidades.content == null || cidades.content.length == 0">
                 <div class="col-md-12 text-center text-muted">
-                    Nenhum registro encontrado...
+                    Nenhuma cidade encontrada... Pesquise novamente ou cadastre uma nova.
                 </div>
             </li>
             <li *ngFor="let cidade of cidades.content; let i = index" class="list-group-item list-vitrine-item"
@@ -58,7 +58,7 @@
 </div>
 
 <app-overlay [(show)]="showSidebar">
-    <app-cidade-form [cidadeId]="cidadeSelecionada?.id" (onSalvar)="salvarCliente()" [abriuModal]="showSidebar">
+    <app-cidade-form [cidadeId]="cidadeSelecionada?.id" (onSalvar)="salvarCidade()" [abriuModal]="showSidebar">
     </app-cidade-form>
 </app-overlay>
 
