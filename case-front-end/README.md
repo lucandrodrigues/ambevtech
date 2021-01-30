@@ -1,7 +1,7 @@
 ## Previsão do Tempo (front-end)
 Case para a AmbevTech
 
-### Installation
+### Instalação e Execução
 ```sh
 > npm install
 > ng serve
