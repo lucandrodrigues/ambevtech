@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Service
 public class CidadeService {
@@ -53,8 +54,10 @@ public class CidadeService {
             BeanUtils.copyProperties(cidadeDTO, cidade);
             cidade = repository.save(cidade);
             BeanUtils.copyProperties(cidade, cidadeDTO);
+        } catch (HttpClientErrorException e) {
+            throw new ServiceException(EnumErrorException.NAO_LOCALIZADO, new Object[]{"Cidade não localizada" });
         } catch (Exception e) {
-            throw new ServiceException(EnumErrorException.ERRO_INTERNO, new Object[]{"Falha cadastrar cidade."});
+            throw new ServiceException(EnumErrorException.ERRO_INTERNO, new Object[]{e.getMessage()});
         }
 
         return cidadeDTO;

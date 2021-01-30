@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -51,9 +52,12 @@ public class OpenWeatherApiService {
             nome = objRetornoResponse.get("name").toString().replaceAll("\"", "");
 
             return new CidadeDTO(nome, coordenadas);
+        } catch (HttpClientErrorException e) {
+            logger.error("Cidade não localizada em OpenWeatherApi: " + e.getMessage());
+            throw new ServiceException(EnumErrorException.NAO_LOCALIZADO);
         } catch (Exception e) {
             logger.error("Falha ao consultar OpenWeatherApi: " + e.getMessage());
-            throw new ServiceException(EnumErrorException.ERRO_INTERNO, new Object[]{e.getMessage()});
+            throw new ServiceException(EnumErrorException.ERRO_INTERNO);
         }
 
     }

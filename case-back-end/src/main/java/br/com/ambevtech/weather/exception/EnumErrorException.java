@@ -16,7 +16,7 @@ public enum EnumErrorException {
             "Registro duplicado",
             "{0}"),
 
-    NAO_LOCALIZADO(HttpStatus.BAD_REQUEST,
+    NAO_LOCALIZADO(HttpStatus.NOT_FOUND,
             "Aviso",
             "Registro não localizado",
             "{0}"),
