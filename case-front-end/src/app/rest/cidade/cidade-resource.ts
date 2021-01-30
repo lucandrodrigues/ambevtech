@@ -1,5 +1,5 @@
 import { Previsao } from './../../models/previsao';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Cidade} from '../../models/cidade';
 import {Observable} from 'rxjs';
 import {endpointBackend} from '../../util/endpoint-config';
@@ -20,7 +20,7 @@ export class CidadeResource {
     }
 
     public listarCidades(filtro: FiltroUtil): Observable<Page<Cidade>> {
-        return this.http.post<Array<Cidade>>(endpointBackend + 'cidade/listar', filtro);
+        return this.http.post<Page<Cidade>>(endpointBackend + 'cidade/listar', filtro);
     }
 
     public buscarPrevisao(cidadeId: number): Observable<Previsao> {
