@@ -5,6 +5,7 @@ import {Observable} from 'rxjs';
 import {endpointBackend} from '../../util/endpoint-config';
 import {FiltroUtil} from '../../util/filtro-util';
 import {Injectable} from '@angular/core';
+import { Page } from '../../util/page';
 
 @Injectable({
     providedIn: 'root'
@@ -18,7 +19,7 @@ export class CidadeResource {
         return this.http.post<Cidade>(endpointBackend + 'cidade', cidade);
     }
 
-    public listarCidades(filtro: FiltroUtil): Observable<Array<Cidade>> {
+    public listarCidades(filtro: FiltroUtil): Observable<Page<Cidade>> {
         return this.http.post<Array<Cidade>>(endpointBackend + 'cidade/listar', filtro);
     }
 

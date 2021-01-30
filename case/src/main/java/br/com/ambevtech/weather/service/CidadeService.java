@@ -27,14 +27,14 @@ public class CidadeService {
         this.openWeatherApiService = openWeatherApiService;
     }
 
-    public Page<CidadeDTO> listarCidades(FiltroDTO<String> filtro) throws ServiceException {
+    public Page<CidadeDTO> listarCidades(FiltroDTO<CidadeDTO> filtro) throws ServiceException {
         if (ObjectUtils.isEmpty(filtro)) {
             throw new ServiceException(EnumErrorException.PARAMETROS_INVALIDOS);
         }
 
         Page<CidadeDTO> cidades = null;
         try {
-            cidades = repository.listarCidades(filtro.getObj(), PageRequest.of(filtro.getPage(), filtro.getSize()));
+            cidades = repository.listarCidades(filtro.getObj().getNome(), PageRequest.of(filtro.getPage(), filtro.getSize()));
         } catch (Exception e) {
             throw new ServiceException(EnumErrorException.ERRO_INTERNO, new Object[]{"Falha ao buscar cidades no banco de dados."});
         }

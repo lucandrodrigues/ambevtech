@@ -5,6 +5,7 @@ import {Cidade} from '../../models/cidade';
 import {Observable, throwError} from 'rxjs';
 import {FiltroUtil} from '../../util/filtro-util';
 import {FunctionsUtil} from '../../util/functions-util';
+import { Page } from '../../util/page';
 
 @Injectable({
     providedIn: 'root'
@@ -21,7 +22,7 @@ export class CidadeService {
         return this.resource.salvarCidade(cidade);
     }
 
-    public listarCidades(filtro: FiltroUtil): Observable<Array<Cidade>> {
+    public listarCidades(filtro: FiltroUtil): Observable<Page<Cidade>> {
         if (!filtro || filtro === null) {
             return throwError('Filtros devem ser informados');
         }

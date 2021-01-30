@@ -84,8 +84,8 @@ public class OpenWeatherApiService {
     }
 
     private List<DiaDTO> somenteCincoDias(List<DiaDTO> dias) {
-        if( dias.size() > 5 ) {
-            dias.subList(5, dias.size()).clear();
+        if( dias.size() > Constantes.DIAS_PREVISAO ) {
+            dias.subList(Constantes.DIAS_PREVISAO, dias.size()).clear();
         }
         return dias;
     }

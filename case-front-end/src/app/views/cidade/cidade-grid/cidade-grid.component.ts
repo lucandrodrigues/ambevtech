@@ -1,11 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import {GridOptions} from 'ag-grid-community';
-import {VsmGridComponent} from '../../../componentes/vsm-grid/vsm-grid.component';
-import {CidadeService} from '../../../service/cidade/cidade.service';
-import {Cidade} from '../../../models/cidade';
-import {FiltroUtil} from '../../../util/filtro-util';
-import {MensagemService} from '../../../service/mensagem.service';
-import {Router} from '@angular/router';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { Page } from './../../../util/page';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { CidadeService } from '../../../service/cidade/cidade.service';
+import { Cidade } from '../../../models/cidade';
+import { FiltroUtil } from '../../../util/filtro-util';
+import { MensagemService } from '../../../service/mensagem.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-cidade-grid',
@@ -14,49 +14,43 @@ import {Router} from '@angular/router';
 })
 export class CidadeGridComponent implements OnInit {
 
-    public gridOptions: GridOptions = VsmGridComponent.getDefaultGridOptions();
-    public cidades: Cidade[] = [];
+    @ViewChild('foco') foco: ElementRef;
+
+    public cidades: Page<Cidade> = new Page<Cidade>(new Array<Cidade>(), 0);
     public filtro: FiltroUtil = new FiltroUtil();
     public cidadeSelecionada = new Cidade();
     public showSidebar = false;
     public showSidebarPrevisao = false;
+    public paginaSelecionada = 1;
+    public formFiltro: FormGroup;
 
-    constructor(private service: CidadeService,
-                private mensagemService: MensagemService,
-                private router: Router) {
-        this.gridOptions.columnDefs = [
-            {
-                headerName: '',
-                width: 20,
-                headerCheckboxSelection: true,
-                checkboxSelection: true,
-                headerCheckboxSelectionFilteredOnly: true
-            },
-            {
-                headerName: 'Nome',
-                field: 'nome',
-                width: 150
-            },
-        ];
+    constructor(
+        private service: CidadeService,
+        public fb: FormBuilder
+    ) {
+        this.formFiltro = fb.group({
+            nome: [null]
+        });
     }
 
     ngOnInit() {
-        this.filtro.obj = '';
+        this.foco.nativeElement.focus();
+        this.filtro.obj = new Cidade();
     }
 
-    public pesquisar(event) {
-        this.filtro.obj = event;
+    public pesquisar() {
+        this.filtro.obj = this.formFiltro.getRawValue();
         this.filtrar();
     }
 
-    public paginar(event) {
-        this.filtro.page = event;
+    paginar(event) {
+        this.paginaSelecionada = event.page;
+        this.filtro.page = event.page - 1;
         this.filtrar();
     }
 
     public duploClick(event) {
         this.cidadeSelecionada = event;
-        console.log('cidadeSelecionada', this.cidadeSelecionada);
         this.showSidebarPrevisao = true;
     }
 
@@ -65,24 +59,14 @@ export class CidadeGridComponent implements OnInit {
         this.showSidebar = true;
     }
 
-    public abrirForm() {
-        if (this.validarSelecaoGrid()) {
-            this.cidadeSelecionada = this.gridOptions.api.getSelectedRows()[0];
-            this.showSidebar = true;
-        }
-    }
-
     public salvarCliente() {
         this.showSidebar = false;
         this.filtrar();
     }
 
-    public abrirPrevisaoTempo() {
-        if (this.validarSelecaoGrid()) {
-            this.cidadeSelecionada = this.gridOptions.api.getSelectedRows()[0];
-            console.log('cidadeSelecionada', this.cidadeSelecionada);
-            this.showSidebarPrevisao = true;
-        }
+    public mostrarPrevisaoTempo(id: number) {
+        this.cidadeSelecionada.id = id;
+        this.showSidebarPrevisao = true;
     }
 
     private filtrar() {
@@ -92,11 +76,4 @@ export class CidadeGridComponent implements OnInit {
             });
     }
 
-    private validarSelecaoGrid() {
-        if (this.gridOptions.api.getSelectedRows().length <= 0) {
-            this.mensagemService.aviso('Atenção', 'Nenhum registro selecionado');
-            return false;
-        }
-        return true;
-    }
 }

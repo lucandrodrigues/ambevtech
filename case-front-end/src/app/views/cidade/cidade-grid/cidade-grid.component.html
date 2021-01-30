@@ -1,4 +1,4 @@
-<div class="card">
+<!-- <div class="card">
     <div class="card-header">
         <div class="float-left">
             <i class="fa fa-list"></i> Cidades
@@ -9,9 +9,6 @@
                     [title]="'Cadastrar Nova Cidade'">
                     <i class="fa fa-search-plus"></i> <span class="d-none d-md-inline"> Nova</span>
                 </button>
-                <!-- <button type="button" class="btn btn-sm btn-warning" (click)="abrirForm();" [title]="'Editar Cidade'">
-                    <i class="fa fa-edit"></i> <span class="d-none d-md-inline"> Editar</span>
-                </button> -->
                 <button type="button" class="btn btn-sm btn-success" (click)="abrirPrevisaoTempo();"
                     [title]="'Previsão do Tempo'">
                     <i class="fa fa-cloud"></i> <span class="d-none d-md-inline"> Previsão do Tempo</span>
@@ -24,23 +21,30 @@
                       (onPesquisar)="pesquisar($event)" (onDuploClick)="duploClick($event)">
         </app-vsm-grid>
     </div>
-</div>
-<!-- <div class="card">
+</div>-->
+<div class="card">
     <div class="card-header">
         <div class="float-left">
             <i class="fa fa-list"></i> Cidades
         </div>
         <div class="btn-group float-right" role="group">
             <button id="btnCadastrar" type="button" class="btn btn-sm btn-success" (click)="novaCidade()">
-                <i class="fa fa-plus-circle"></i> <span class="d-none d-md-inline"> Cadastrar</span>
-            </button>
-
-            <button id="btnPesquisar" type="button" class="btn btn-sm btn-success" (click)="pesquisar()">
-                <i class="fa fa-plus-circle"></i> <span class="d-none d-md-inline"> Pesquisar</span>
+                <i class="fa fa-plus-circle"></i> <span class="d-none d-md-inline"> Cadastrar Cidade</span>
             </button>
         </div>
     </div>
     <div class="card-body">
+        <form [formGroup]="formFiltro">
+            <div class="input-group">
+                <input #foco id="inputPesquisar" formControlName="nome" (keyup.enter)="pesquisar();" type="text" class="form-control"
+                    placeholder="Pesquise uma Cidade..." aria-label="Pesquisar" aria-describedby="basic-addon1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1" style="cursor: pointer" (click)="pesquisar();">
+                        <i class="fa fa-search mr-1"></i>Pesquisar
+                    </span>
+                </div>
+            </div>
+        </form>
         <ul class="list-group pt-2">
             <li class="list-group" *ngIf="cidades.content == null || cidades.content.length == 0">
                 <div class="col-md-12 text-center text-muted">
@@ -48,7 +52,7 @@
                 </div>
             </li>
             <li *ngFor="let cidade of cidades.content; let i = index" class="list-group-item list-vitrine-item"
-                (dblclick)="editar(cidade.id)">
+                (dblclick)="mostrarPrevisaoTempo(cidade.id)" title="Dê dois cliques para visualizar a previsão do tempo.">
                 <div class="form-row">
                     <div class="col-sm-8 column-img text-left" style="display:flex">
                         <div style="align-self: center">
@@ -57,25 +61,25 @@
                     </div>
                     <div class="col-sm-4 vitrine-button-group place-center text-right">
                         <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-sm btn-primary" (click)="editar(vitrine.id)"
-                                id="btnEditar">
-                                <i class="fa fa-sun-o"></i> Previsão do Tempo
+                            <button type="button" class="btn btn-sm btn-info"
+                                (click)="mostrarPrevisaoTempo(cidade.id)" id="btnEditar">
+                                <i class="fa fa-eye"></i> Previsão do Tempo
                             </button>
                         </div>
                     </div>
                 </div>
             </li>
         </ul>
-        <<pagination *ngIf="(cidades && cidades.totalElements && cidades.totalElements > 7)"
-            class="pagination justify-content-center mt-2" [(ngModel)]="paginaSelecionada" [boundaryLinks]="true"
-            [totalItems]="cidades.totalElements" [maxSize]="5" [itemsPerPage]="7" (pageChanged)="paginar($event);"
-            previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+        <pagination *ngIf="(cidades && cidades.totalElements && cidades.totalElements > 7)"
+            class="pagination justify-content-center mt-2" [boundaryLinks]="true" [totalItems]="cidades.totalElements"
+            [maxSize]="5" [itemsPerPage]="7" (pageChanged)="paginar($event);" previousText="&lsaquo;"
+            nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
         </pagination>
         <div class="float-right" id="totalRegistro">
             Total de registros: {{(cidades.totalElements > 0) ? cidades.totalElements : 0}}
         </div>
     </div>
-</div> -->
+</div>
 
 <app-overlay [(show)]="showSidebar">
     <app-cidade-form [cidadeId]="cidadeSelecionada?.id" (onSalvar)="salvarCliente()" [abriuModal]="showSidebar">

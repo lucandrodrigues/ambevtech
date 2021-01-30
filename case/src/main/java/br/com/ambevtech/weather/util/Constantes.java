@@ -10,4 +10,6 @@ public class Constantes {
         public static final String UNITS = "metric";
     }
 
+    public static final int DIAS_PREVISAO = 5;
+
 }

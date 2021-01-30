@@ -29,7 +29,7 @@ public class CidadeResource {
 
     @PostMapping("/listar")
     @ApiOperation(value = "Listar cidades", response = CidadeDTO.class, notes = "Retorna as cidades cadastradas")
-    public ResponseEntity<?> listarCidades(@ApiParam(value = "Nome da cidade e valores da paginação") @RequestBody FiltroDTO<String> filtro) throws ServiceException {
+    public ResponseEntity<?> listarCidades(@ApiParam(value = "Nome da cidade e valores da paginação") @RequestBody FiltroDTO<CidadeDTO> filtro) throws ServiceException {
         return ResponseEntity.ok(service.listarCidades(filtro));
     }
 
