@@ -23,10 +23,6 @@ export const routes: Routes = [
             {
                 path: 'cidade',
                 loadChildren: './views/cidade/cidade.module#CidadeModule'
-            },
-            {
-                path: 'previsao',
-                loadChildren: './views/forecast/forecast.module#ForecastModule'
             }
         ]
     }
