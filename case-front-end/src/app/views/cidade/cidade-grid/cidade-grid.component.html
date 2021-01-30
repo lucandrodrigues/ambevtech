@@ -58,7 +58,7 @@
 </div>
 
 <app-overlay [(show)]="showSidebar">
-    <app-cidade-form [cidadeId]="cidadeSelecionada?.id" (onSalvar)="salvarCidade()" [abriuModal]="showSidebar">
+    <app-cidade-form (onSalvar)="salvarCidade($event)" [abriuModal]="showSidebar">
     </app-cidade-form>
 </app-overlay>
 

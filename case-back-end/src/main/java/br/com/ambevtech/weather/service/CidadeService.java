@@ -3,7 +3,7 @@ package br.com.ambevtech.weather.service;
 import br.com.ambevtech.weather.config.CacheNames;
 import br.com.ambevtech.weather.dto.CidadeDTO;
 import br.com.ambevtech.weather.dto.FiltroDTO;
-import br.com.ambevtech.weather.dto.PrevisaoDTO;
+import br.com.ambevtech.weather.dto.previsao.PrevisaoDTO;
 import br.com.ambevtech.weather.entity.Cidade;
 import br.com.ambevtech.weather.exception.EnumErrorException;
 import br.com.ambevtech.weather.exception.ServiceException;
@@ -56,7 +56,7 @@ public class CidadeService {
     private void salvar(CidadeDTO cidadeDTO) {
         Cidade cidade = new Cidade();
         BeanUtils.copyProperties(cidadeDTO, cidade);
-        repository.save(cidade);
+        cidade = repository.save(cidade);
         BeanUtils.copyProperties(cidade, cidadeDTO);
     }
 

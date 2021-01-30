@@ -1,4 +1,4 @@
-package br.com.ambevtech.weather.dto;
+package br.com.ambevtech.weather.dto.previsao;
 
 import br.com.ambevtech.weather.util.Constantes;
 import com.google.gson.annotations.SerializedName;

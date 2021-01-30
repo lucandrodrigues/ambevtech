@@ -2,7 +2,7 @@ package br.com.ambevtech.weather.resource;
 
 import br.com.ambevtech.weather.dto.CidadeDTO;
 import br.com.ambevtech.weather.dto.FiltroDTO;
-import br.com.ambevtech.weather.dto.PrevisaoDTO;
+import br.com.ambevtech.weather.dto.previsao.PrevisaoDTO;
 import br.com.ambevtech.weather.exception.ServiceException;
 import br.com.ambevtech.weather.exception.ValidMessages;
 import br.com.ambevtech.weather.service.CidadeService;

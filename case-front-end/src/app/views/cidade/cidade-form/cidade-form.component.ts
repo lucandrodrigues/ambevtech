@@ -12,10 +12,9 @@ import { MensagemService } from '../../../service/mensagem.service';
 })
 export class CidadeFormComponent implements OnInit, OnChanges {
 
-    @Input() cidadeId = 0;
     // tslint:disable-next-line:no-output-on-prefix
-    @Output() onSalvar = new EventEmitter();
     @Input() abriuModal = false;
+    @Output() onSalvar = new EventEmitter();
     public form: FormGroup;
     public cidade: Cidade = new Cidade();
 
@@ -34,11 +33,7 @@ export class CidadeFormComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges) {
         if (changes) {
             if (this.abriuModal === true) {
-                if (!FunctionsUtil.isEmptyId(this.cidadeId)) {
-                    
-                } else {
-                    this.form.reset();
-                }
+                this.form.reset();
             }
         }
     }
@@ -49,7 +44,7 @@ export class CidadeFormComponent implements OnInit, OnChanges {
             (response) => {
                 this.form.patchValue(response);
                 this.mensagemService.sucesso('Atençao', 'Cidade salva com sucesso!');
-                this.onSalvar.emit();
+                this.onSalvar.emit(this.cidade);
             });
     }
 

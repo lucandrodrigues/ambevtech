@@ -60,7 +60,9 @@ export class CidadeGridComponent implements OnInit {
         this.showSidebar = true;
     }
 
-    public salvarCidade() {
+    public salvarCidade(event) {
+        this.filtro.obj = event;
+        this.formFiltro.patchValue(event);
         this.showSidebar = false;
         this.filtrar();
     }

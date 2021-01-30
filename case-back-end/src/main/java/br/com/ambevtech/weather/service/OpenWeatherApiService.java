@@ -3,8 +3,8 @@ package br.com.ambevtech.weather.service;
 import br.com.ambevtech.weather.config.CacheNames;
 import br.com.ambevtech.weather.config.OpenWeatherApiConfig;
 import br.com.ambevtech.weather.dto.CidadeDTO;
-import br.com.ambevtech.weather.dto.DiaDTO;
-import br.com.ambevtech.weather.dto.PrevisaoDTO;
+import br.com.ambevtech.weather.dto.previsao.DiaDTO;
+import br.com.ambevtech.weather.dto.previsao.PrevisaoDTO;
 import br.com.ambevtech.weather.entity.Cidade;
 import br.com.ambevtech.weather.exception.EnumErrorException;
 import br.com.ambevtech.weather.exception.ServiceException;
@@ -36,7 +36,6 @@ public class OpenWeatherApiService {
         this.openWeatherApiConfig = openWeatherApiConfig;
     }
 
-    @Cacheable(value = CacheNames.cacheCidade, key = "{#nome}")
     private ResponseEntity<String> buscarCidadeApi(String nome) throws ServiceException {
         try {
             String uri = "/data/2.5/weather?appid=" + Constantes.OpenWeatherMap.APPID + "&q=" + nome;
@@ -55,6 +54,7 @@ public class OpenWeatherApiService {
 
     }
 
+    @Cacheable(value = CacheNames.cacheCidade, key = "{#nome}")
     public CidadeDTO buscarCidade(String nome) {
         ResponseEntity<String> response = buscarCidadeApi(nome);
 

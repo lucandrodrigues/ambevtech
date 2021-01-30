@@ -1,4 +1,4 @@
-package br.com.ambevtech.weather.dto;
+package br.com.ambevtech.weather.dto.previsao;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
