@@ -11,7 +11,6 @@ import br.com.ambevtech.weather.util.Constantes;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import org.hibernate.validator.constraints.Range;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,42 +36,35 @@ public class OpenWeatherApiService {
 
     public CidadeDTO buscarCidade(String nome) throws ServiceException {
         try {
-            String url = "/data/2.5/weather" +
-                    "?appid=" + Constantes.OpenWeatherMap.APPID +
-                    "&q=" + nome;
+            String uri = "/data/2.5/weather" + "?appid=" + Constantes.OpenWeatherMap.APPID + "?q=" + nome;
             logger.info("Consultando previsão em OpenWeatherApi para a cidade: " + nome);
-            ResponseEntity<String> response = openWeatherApiConfig.getRestTemplate().getForEntity(url, String.class);
+            ResponseEntity<String> response = openWeatherApiConfig.getRestTemplate().getForEntity(uri, String.class);
             logger.info("Consulta realizada: " + response.toString());
 
             Gson gson = new Gson();
             JsonObject objRetornoResponse = gson.fromJson(response.getBody(), JsonObject.class);
 
-            Type type = new TypeToken<Map<String, BigDecimal>>() {}.getType();
+            Type type = new TypeToken<Map<String, BigDecimal>>() {
+            }.getType();
             Map<String, BigDecimal> coordenadas = gson.fromJson(objRetornoResponse.get("coord"), type);
             nome = objRetornoResponse.get("name").toString().replaceAll("\"", "");
 
             return new CidadeDTO(nome, coordenadas);
         } catch (HttpClientErrorException e) {
             logger.error("Cidade não localizada em OpenWeatherApi: " + e.getMessage());
-            throw new ServiceException(EnumErrorException.NAO_LOCALIZADO);
+            throw e;
         } catch (Exception e) {
             logger.error("Falha ao consultar OpenWeatherApi: " + e.getMessage());
-            throw new ServiceException(EnumErrorException.ERRO_INTERNO);
+            throw e;
         }
 
     }
 
     public PrevisaoDTO buscarPrevisao(Cidade cidade) throws ServiceException {
         try {
-            String url = "/data/2.5/onecall" +
-                    "?appid=" + Constantes.OpenWeatherMap.APPID +
-                    "&lang=" + Constantes.OpenWeatherMap.LANG +
-                    "&units=" + Constantes.OpenWeatherMap.UNITS +
-                    "&exclude=current,minutely,hourly,alerts" +
-                    "&lat=" + cidade.getLatitude() +
-                    "&lon=" + cidade.getLongitude();
+            String uri = buildURIPrevisao(cidade);
             logger.info("Consultando previsão diária em OpenWeatherApi para a cidade: " + cidade.getNome());
-            ResponseEntity<String> response = openWeatherApiConfig.getRestTemplate().getForEntity(url, String.class);
+            ResponseEntity<String> response = openWeatherApiConfig.getRestTemplate().getForEntity(uri, String.class);
             logger.info("Consulta realizada: " + response.toString());
 
             Gson gson = new Gson();
@@ -87,8 +79,18 @@ public class OpenWeatherApiService {
         }
     }
 
+    private String buildURIPrevisao(Cidade cidade) {
+        return "/data/2.5/onecall" +
+                "?appid=" + Constantes.OpenWeatherMap.APPID +
+                "?lang=" + Constantes.OpenWeatherMap.LANG +
+                "?units=" + Constantes.OpenWeatherMap.UNITS +
+                "&exclude=current,minutely,hourly,alerts" +
+                "?lat=" + cidade.getLatitude() +
+                "?lon=" + cidade.getLongitude();
+    }
+
     private List<DiaDTO> somenteCincoDias(List<DiaDTO> dias) {
-        if( dias.size() > Constantes.DIAS_PREVISAO ) {
+        if (dias.size() > Constantes.DIAS_PREVISAO) {
             dias.subList(Constantes.DIAS_PREVISAO, dias.size()).clear();
         }
         return dias;
