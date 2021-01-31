@@ -28,6 +28,13 @@ public class CidadeService {
         this.openWeatherApiService = openWeatherApiService;
     }
 
+    /**
+     * @author Lucas Andrade
+     * @param 'FiltroDTO<CidadeDTO>' - filtro genérico para busca de cidades
+     * @return 'Page<CidadeDTO>' - Pagina de dto de cidades
+     * @throws ServiceException
+     * @method Método responsável por listar as cidades cadastradas
+     */
     public Page<CidadeDTO> listarCidades(FiltroDTO<CidadeDTO> filtro) throws ServiceException {
         if (ObjectUtils.isEmpty(filtro)) {
             throw new ServiceException(EnumErrorException.PARAMETROS_INVALIDOS);
@@ -40,6 +47,13 @@ public class CidadeService {
         }
     }
 
+    /**
+     * @author Lucas Andrade
+     * @param 'String' - Nome da cidade a ser cadastrada
+     * @return 'CidadeDTO' -  Dto da cidade
+     * @throws ServiceException
+     * @method Método responsável por cadastrar uma cidade válida
+     */
     public CidadeDTO cadastrarCidade(String nome) throws ServiceException {
         CidadeDTO cidadeDTO = validarCidadeCadastrada(nome);
         try {
@@ -53,6 +67,11 @@ public class CidadeService {
         }
     }
 
+    /**
+     * @author Lucas Andrade
+     * @param 'CidadeDTO' - Dto da cidade para conversão em entidade
+     * @method Método responsável por persistir se a cidade no banco de dados
+     */
     private void salvar(CidadeDTO cidadeDTO) {
         Cidade cidade = new Cidade();
         BeanUtils.copyProperties(cidadeDTO, cidade);
@@ -60,6 +79,13 @@ public class CidadeService {
         BeanUtils.copyProperties(cidade, cidadeDTO);
     }
 
+    /**
+     * @author Lucas Andrade
+     * @param 'String' - Nome da cidade a ser validada
+     * @return 'CidadeDTO' -  Dto da cidade
+     * @throws ServiceException
+     * @method Método responsável por verificar se a cidade já está cadastrada
+     */
     private CidadeDTO validarCidadeCadastrada(String nome) throws ServiceException {
         CidadeDTO dto = repository.findByNome(nome);
         if (!ObjectUtils.isEmpty(dto)) {
@@ -68,6 +94,13 @@ public class CidadeService {
         return dto;
     }
 
+    /**
+     * @author Lucas Andrade
+     * @param 'Integer' - Identificador da cidade
+     * @return 'PrevisaoDTO' -  Dto da previsão da cidade
+     * @throws ServiceException
+     * @method Método responsável por consultar a previsão do tempo de uma cidade
+     */
     @Cacheable(value = CacheNames.cachePrevisao, key = "{#id}")
     public PrevisaoDTO consultarPrevisao(Integer id) throws ServiceException {
         Cidade cidade = repository.findById(id)
